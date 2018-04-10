@@ -8,6 +8,8 @@ A simple Tic-Tac-Toe game using webRTC
 - Be able to chat
 - Be able to play multiple players
 
+## Requirements
+- Node.js https://nodejs.org/
 ## Installation
 Just do
 ```
