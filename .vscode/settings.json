@@ -1,0 +1,10 @@
+{
+    "todohighlight.keywords": [
+        {
+            "text": "NOTE",
+            "color": "#ff9933",
+            "backgroundColor": "#221100",
+            "isWholeLine": true
+        }
+    ]
+}
