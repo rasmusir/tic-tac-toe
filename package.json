@@ -17,6 +17,7 @@
   "author": "Rasmus Israelsson & Chris Clutton",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "ws": "^5.1.1"
   }
 }
