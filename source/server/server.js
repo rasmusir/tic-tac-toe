@@ -8,14 +8,15 @@ const app = express()
 
 //NOTE create server
 const server = http.createServer(app)
-
-app.use("/script/", express.static("source/client/"))
-app.use("/", express.static("public/views/"))
-
 const webSocketServer = new WebSocket.Server({ server })
 
 var currentId = 1
 const connectedClients = new Map()
+
+app.use("/script/", express.static("source/client/"))
+app.use("/", express.static("public/views/"))
+
+app.get("/playersonline", (req, res) => res.send(JSON.stringify({players: connectedClients.size})))
 
 webSocketServer.on("connection", socket => {
     var client = new Client(socket)
@@ -48,10 +49,30 @@ class Client {
                     this.send("name accepted", {
                         id: this.id
                     })
-                    connectedClients.set(this.id, this)
+                    this.handleNameAccepted()
                 }
                 break
+            case "get players":
+                this.send("players online", {players: [...connectedClients.values()].map(client => ({name: client.name, id: client.id}))} )
+                break
+            case "forward":
+                this.handleForward(message.payload)
+                break
         }
+    }
+
+    handleNameAccepted() {
+        connectedClients.set(this.id, this)
+        connectedClients.forEach(client => {
+            if (client !== this)
+                client.send("player came online", {name: this.name, id: this.id})
+        })
+    }
+
+    handleForward(payload) {
+        var target = connectedClients.get(payload.message.target)
+        if (target)
+            target.send("forwarded", {from: this.id, message: payload.message})
     }
 
     handleClose() {
