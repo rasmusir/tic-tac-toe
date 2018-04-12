@@ -1,0 +1,14 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "lib": [
+            "dom",
+            "es6",
+            "es2016"
+        ],
+        "sourceMap": true
+    },
+    "include": [
+        "**/*"
+    ]
+}

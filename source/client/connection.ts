@@ -1,14 +1,12 @@
 export class Connection {
-    constructor() {
-        this.connected = false
-        this.websocket = null
-        this.name = null
-        this.id = null
 
-        this.events = new Map()
-    }
+    public connected = false
+    private websocket: WebSocket = null
+    private name: String = null
+    private id: String = null
+    private events = new Map()
 
-    connect(name) {
+    connect(name: String) {
         this.websocket = new WebSocket("ws://localhost:9080/")
         this.websocket.onmessage = message => this.handleMessage(message)
         this.websocket.onopen = () => this.handleConnectionOpen()
@@ -20,7 +18,7 @@ export class Connection {
         this.send("set name", {name: this.name})
     }
 
-    handleMessage(message) {
+    handleMessage(message: any) {
         var data = JSON.parse(message.data)
         
         switch (data.id) {
@@ -42,30 +40,30 @@ export class Connection {
         this.handleDefaultMessage(data)
     }
 
-    handleDefaultMessage(message) {
+    private handleDefaultMessage(message: any) {
         var callback = this.events.get(message.id)
         if (callback)
             callback(message.payload)
     }
 
-    handleForwardedMessage(payload) {
+    private handleForwardedMessage(payload: any) {
         var callback = this.events.get(payload.message.id)
         if (callback)
             callback(payload.message.payload, payload.from)
     }
 
-    on(messageId, callback) {
+    on(messageId: string, callback: Function) {
         this.events.set(messageId, callback)
     }
 
-    send(messageId, payload) {
+    send(messageId: string, payload?: any) {
         if (this.connected)
             this.websocket.send(JSON.stringify({id: messageId, payload}))
         else
             throw new Error("Not connected to anything you dimwit.")
     }
 
-    sendTo(clientId, messageId, payload) {
+    sendTo(clientId: string, messageId: string, payload?: any) {
         this.send("forward", {
             message: {
                 id: messageId,

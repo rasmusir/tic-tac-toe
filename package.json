@@ -2,10 +2,15 @@
   "name": "tictactoe",
   "version": "1.0.0",
   "description": "A simple Tic-Tac-Toe game",
-  "main": "source/server/server.js",
+  "main": "build/server/server.js",
   "scripts": {
-    "start": "node source/server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node build/server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "run-p watch build:watch",
+    "watch": "nodemon --delay 1 --watch build/server",
+    "build:watch": "run-p -s build:client:watch build:server:watch",
+    "build:client:watch": "tsc -p source/client/tsconfig.json --watch",
+    "build:server:watch": "tsc -p source/server/tsconfig.json --watch"
   },
   "keywords": [
     "tic",
@@ -17,7 +22,13 @@
   "author": "Rasmus Israelsson & Chris Clutton",
   "license": "ISC",
   "dependencies": {
+    "@types/express": "^4.11.1",
+    "@types/websocket": "0.0.38",
+    "@types/ws": "^4.0.2",
     "express": "^4.16.3",
+    "nodemon": "^1.17.3",
+    "npm-run-all": "^4.1.2",
+    "typescript": "^2.8.1",
     "ws": "^5.1.1"
   }
 }

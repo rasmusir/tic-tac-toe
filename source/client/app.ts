@@ -1,11 +1,11 @@
-import {Connection} from './connection.js'
+import {Connection} from './connection'
 
 window.addEventListener("load", main)
 
 function main() {
     var conn = new Connection()
-    
-    var nameInput = document.querySelector("#name")
+
+    var nameInput: HTMLInputElement = document.querySelector("#name")
     var connectButton = document.querySelector("#connect")
     var connectionForm = document.querySelector("#connectionForm")
     var playersOnlineList = document.querySelector("#playersOnlineList")
@@ -25,24 +25,24 @@ function main() {
             alert("Just no mate, enter a name.")
     })
 
-    conn.on("player came online", player => {
+    conn.on("player came online", (player: any) => {
         addPlayer(player)
         currentPlayersOnline++
-        playersOnlineCount.innerHTML = currentPlayersOnline
+        playersOnlineCount.innerHTML = currentPlayersOnline.toString()
     })
 
-    conn.on("players online", payload => {
+    conn.on("players online", (payload: any) => {
         playersOnlineList.innerHTML = ""
         currentPlayersOnline = payload.players.length
-        playersOnlineCount.innerHTML = currentPlayersOnline
-        payload.players.forEach(player => addPlayer(player))
+        playersOnlineCount.innerHTML = currentPlayersOnline.toString()
+        payload.players.forEach((player: any) => addPlayer(player))
     })
 
-    conn.on("wave", (payload, from) => {
+    conn.on("wave", (payload: any, from: string) => {
         alert(from + " waved at you")
     })
 
-    function addPlayer(player) {
+    function addPlayer(player: any) {
         var listItem = document.createElement("li")
         var wave = document.createElement("button")
         wave.innerText = "👋"

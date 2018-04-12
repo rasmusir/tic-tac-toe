@@ -1,8 +1,7 @@
 //NOTE import libraries/modules
-const express = require("express")
-const http = require("http")
-const WebSocket = require("ws")
-
+import * as express from "express"
+import * as http from "http"
+import * as WebSocket from "ws"
 //NOTE create server "app"
 const app = express()
 
@@ -11,9 +10,9 @@ const server = http.createServer(app)
 const webSocketServer = new WebSocket.Server({ server })
 
 var currentId = 1
-const connectedClients = new Map()
+const connectedClients = new Map<String, Client>()
 
-app.use("/script/", express.static("source/client/"))
+app.use("/script/", express.static("build/client/", {extensions: ["js"]}))
 app.use("/", express.static("public/views/"))
 
 app.get("/playersonline", (req, res) => res.send(JSON.stringify({players: connectedClients.size})))
@@ -23,28 +22,31 @@ webSocketServer.on("connection", socket => {
 })
 
 class Client {
-    constructor(socket) {
-        this.name = null
-        this.id = null
+
+    private name: String = null
+    private id: String = null
+    private socket: WebSocket = null
+
+    constructor(socket: WebSocket) {
         this.socket = socket
         this.socket.on("message", message => this.handleMessage(message))
         this.socket.on("close", () => this.handleClose())
     }
 
-    send(messageId, payload) {
+    send(messageId: String, payload?: any) {
         this.socket.send(JSON.stringify({id: messageId, payload}))
     }
 
-    handleMessage(message) {
+    handleMessage(message: any) {
         message = JSON.parse(message)
         switch (message.id) {
             case "set name":
-                if (connectedClients.find((key, value) => value.name === message.payload.name)) {
+                if ([...connectedClients.values()].find((value: Client) => value.name === message.payload.name)) {
                     this.send("name denied")
                     this.socket.close()
                 }
                 else {
-                    this.id = currentId++
+                    this.id = (currentId++).toString()
                     this.name = message.payload.name
                     this.send("name accepted", {
                         id: this.id
@@ -69,7 +71,7 @@ class Client {
         })
     }
 
-    handleForward(payload) {
+    handleForward(payload: any) {
         var target = connectedClients.get(payload.message.target)
         if (target)
             target.send("forwarded", {from: this.id, message: payload.message})
@@ -78,17 +80,6 @@ class Client {
     handleClose() {
         connectedClients.delete(this.id)
     }
-}
-
-Map.prototype.find = function(func) {
-    var foundKey = null
-    this.forEach((value, key) => {
-        if (func(key, value))
-            return foundKey = key
-    })
-    if (foundKey !== null)
-        return this.get(foundKey)
-    return null
 }
 
 server.listen(9080, () => console.log("Listening on port 9080"))
