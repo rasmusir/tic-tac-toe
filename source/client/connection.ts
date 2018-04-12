@@ -7,7 +7,7 @@ export class Connection {
     private events = new Map()
 
     connect(name: String) {
-        this.websocket = new WebSocket("ws://localhost:9080/")
+        this.websocket = new WebSocket(`ws://${window.location.host}/`)
         this.websocket.onmessage = message => this.handleMessage(message)
         this.websocket.onopen = () => this.handleConnectionOpen()
         this.name = name
