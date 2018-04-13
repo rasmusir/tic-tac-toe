@@ -73,6 +73,7 @@ class Client {
 
     handleForward(payload: any) {
         var target = connectedClients.get(payload.message.target)
+        console.log(`forwarding ${payload.message.id} from ${this.name} to ${target.name}`)
         if (target)
             target.send("forwarded", {from: this.id, message: payload.message})
     }

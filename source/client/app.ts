@@ -1,9 +1,28 @@
 import {Connection} from './connection'
+import { WebRTC } from './webrtcClient';
 
 window.addEventListener("load", main)
 
 function main() {
-    var conn = new Connection()
+    var serverConnection = new Connection()
+    var rtc = new WebRTC()
+    var otherId = ""
+    rtc.onICECandidate = event => {
+        if (event.candidate)
+            serverConnection.sendTo("ice", otherId, { ice: event.candidate })
+    }
+    rtc.onSendLocalDescription = description => serverConnection.sendTo("sdp", otherId, { sdp: description })
+
+    serverConnection.on("ice", (payload: any, from: string) => {
+        console.log("Got ICE from " + from)
+        rtc.addIceCandidate(payload.ice)
+    })
+
+    serverConnection.on("sdp", (payload: any, from: string) => {
+        console.log("Got SDP from " + from)
+        otherId = from
+        rtc.handleSDP(payload.sdp)
+    })
 
     var nameInput: HTMLInputElement = document.querySelector("#name")
     var connectButton = document.querySelector("#connect")
@@ -20,33 +39,32 @@ function main() {
         event.preventDefault()
         var name = nameInput.value.trim()
         if (name.length !== 0)
-            conn.connect(name)
+            serverConnection.connect(name)
         else
             alert("Just no mate, enter a name.")
     })
 
-    conn.on("player came online", (player: any) => {
+    serverConnection.on("player came online", (player: any) => {
         addPlayer(player)
         currentPlayersOnline++
         playersOnlineCount.innerHTML = currentPlayersOnline.toString()
     })
 
-    conn.on("players online", (payload: any) => {
+    serverConnection.on("players online", (payload: any) => {
         playersOnlineList.innerHTML = ""
         currentPlayersOnline = payload.players.length
         playersOnlineCount.innerHTML = currentPlayersOnline.toString()
         payload.players.forEach((player: any) => addPlayer(player))
     })
 
-    conn.on("wave", (payload: any, from: string) => {
-        alert(from + " waved at you")
-    })
-
     function addPlayer(player: any) {
         var listItem = document.createElement("li")
         var wave = document.createElement("button")
         wave.innerText = "👋"
-        wave.onclick = () => conn.sendTo(player.id, "wave", {text: "no u"})
+        wave.onclick = () => {
+            otherId = player.id
+            rtc.call()
+        }
         listItem.innerHTML = player.name
         listItem.appendChild(wave)
         playersOnlineList.appendChild(listItem)

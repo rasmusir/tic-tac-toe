@@ -63,7 +63,7 @@ export class Connection {
             throw new Error("Not connected to anything you dimwit.")
     }
 
-    sendTo(clientId: string, messageId: string, payload?: any) {
+    sendTo(messageId: string, clientId: string, payload?: any) {
         this.send("forward", {
             message: {
                 id: messageId,
