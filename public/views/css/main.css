@@ -61,7 +61,9 @@ button {
 .red { border-image-source: url("images/red_panel.png"); }
 button.red:active { border-image-source: url("images/red_panel_inset.png"); }
 .yellow { border-image-source: url("images/yellow_panel.png"); }
+button.yellow:active { border-image-source: url("images/yellow_panel_inset.png"); }
 .green { border-image-source: url("images/green_panel.png"); }
+button.green:active { border-image-source: url("images/green_panel_inset.png"); }
 
 .panel {
     color: rgba(0, 0, 0, 0.8);
