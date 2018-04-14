@@ -3,16 +3,20 @@
     <head>
         <title>Tic-Tac-Toe</title>
         <script type="module" src="/script/app.js"> </script>
+        <link rel="stylesheet" type="text/css" href="css/main.css">
     </head>
     <body>
         <h1>Tic-Tac-Toe</h1>
         <form id="connectionForm">
             <h2>Choose a name</h2>
-            <label >Name: </label><input id="name"><button id="connect">Connect</button>
+            <div class="fieldset panel yellow">
+                <label >Name: </label>
+                <input id="name">
+            </div>
+            <button id="connect" class="panel green">Connect</button>
         </form>
-        <h2>Players online: <span id="playersOnlineCount"></span></h2>
-        <ul id="playersOnlineList">
-
-        </ul>
+        <h2 class="panel yellow">Players online: <span id="playersOnlineCount"></span></h2>
+        <div id="playersOnlineList">
+        </div>
     </body>
 </html>

@@ -58,15 +58,13 @@ function main() {
     })
 
     function addPlayer(player: any) {
-        var listItem = document.createElement("li")
-        var wave = document.createElement("button")
-        wave.innerText = "👋"
-        wave.onclick = () => {
+        var button = document.createElement("button")
+        button.className = "panel yellow"
+        button.innerText = player.name
+        button.onclick = () => {
             otherId = player.id
             rtc.call()
         }
-        listItem.innerHTML = player.name
-        listItem.appendChild(wave)
-        playersOnlineList.appendChild(listItem)
+        playersOnlineList.appendChild(button)
     }
 }
