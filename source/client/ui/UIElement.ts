@@ -66,7 +66,7 @@ export function view(view: string) {
 
 export function root(root: Element) {
     return function<T extends {new(...args:any[]):UIElement}>(constructor: T){
-        (constructor as any)["_view"] = view
+        (constructor as any)["_view"] = root
         return constructor
     }
 }
