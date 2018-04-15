@@ -1,6 +1,8 @@
 import { UIElement, root, bind } from "./UIElement";
 import { LoginElement, LoginListener } from "./loginElement";
 import { Connections } from "../connections";
+import { PlayerListElement } from "./playerListElement";
+import { Player } from "../player";
 
 @root(document.body)
 export class Index extends UIElement implements LoginListener {
@@ -11,8 +13,12 @@ export class Index extends UIElement implements LoginListener {
     @bind("mainHolder")
     private mainHolderDiv: HTMLDivElement
 
+    @bind("playerListHolder")
+    private playerListHolderDiv: HTMLDivElement
+
     private connections: Connections
     private loginElement: LoginElement
+    private playerListElement: PlayerListElement
 
     protected onViewCreated(): void {
         this.loginElement = new LoginElement()
@@ -26,11 +32,24 @@ export class Index extends UIElement implements LoginListener {
         this.connections = connections
     }
 
+    private onLoggedIn() {
+        this.playerListElement = new PlayerListElement()
+
+        var fakePlayers = new Map<string, Player>()
+        for (var i = 0; i < 25; i++) {
+            fakePlayers.set(i.toString(), new Player())
+        }
+
+        this.playerListElement.populate(fakePlayers)
+        this.playerListElement.appendTo(this.playerListHolderDiv)
+    }
+
     async onRequestLogin(name: string, title: string) {
         try {
             await this.connections.connectToServer(name)
             this.loginElement.destroy()
             this.loginElement = null
+            this.onLoggedIn()
         }
         catch (e) {
             alert("Name already taken")

@@ -92,12 +92,6 @@ button.white:active { border-image-source: url("images/white_panel_inset.png"); 
     display: inline-block;
 }
 
-.playerPanel {
-    display: inline-block;
-    width: 192px;
-    height: 58px;
-}
-
 .popupBubble {
     position: absolute;
     margin-top: -6px;

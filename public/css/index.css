@@ -24,6 +24,12 @@
 
 #playerListHolder {
     flex-grow: 1;
+    flex-basis: 0;
+    overflow-y: scroll;
+}
+
+#playerListHolder::-webkit-scrollbar {
+    display: none;
 }
 
 #mainHolder {
@@ -34,4 +40,18 @@
 
 #chatAndProfileHolder {
     flex-grow: 1;
+    flex-basis: 0;
+}
+
+.playerList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.playerPanel {
+    display: inline-block;
+    width: 170px;
+    height: 58px;
+    margin-bottom: 8px
 }
