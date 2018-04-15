@@ -26,6 +26,12 @@ h2 {
     font-weight: normal;
 }
 
+#logo {
+    width: calc(62px*4);
+    height: calc(7px*4);
+    margin: 10px;
+}
+
 input, button {
     font-family: inherit;
     font-size: inherit;
