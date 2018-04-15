@@ -22,6 +22,7 @@ export abstract class UIElement {
     }
 
     private bindViews() {
+        this.viewBindings = this.viewBindings || new Array<{tag: string, property: string}>()
         var nodeList = this.root.querySelectorAll("[tag]")
         var node : Element;
         var binding : {tag: string, property: string}
