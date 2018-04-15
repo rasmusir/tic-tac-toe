@@ -1,4 +1,4 @@
-export class Connection {
+export class ServerConnection {
 
     public connected = false
     private websocket: WebSocket = null
@@ -54,6 +54,10 @@ export class Connection {
 
     on(messageId: string, callback: Function) {
         this.events.set(messageId, callback)
+    }
+    
+    remove(messageId: string) {
+        this.events.delete(messageId)
     }
 
     send(messageId: string, payload?: any) {

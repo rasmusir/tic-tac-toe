@@ -2,7 +2,7 @@ export abstract class UIElement {
 
     private static rootViewPath: string = "/view/"
     private static viewCache = new Map<string, HTMLTemplateElement>()
-    protected root : Element
+    protected root : HTMLElement
     private viewBindings : Array<{tag: string, property: string}>
 
     constructor() {
@@ -11,13 +11,13 @@ export abstract class UIElement {
         this.onViewCreated()
     }
 
-    protected setViewFromCache(pathOrElement: string | Element) {
-        if (pathOrElement instanceof Element) {
+    protected setViewFromCache(pathOrElement: string | HTMLElement) {
+        if (pathOrElement instanceof HTMLElement) {
             this.root = pathOrElement
         } else {
             let cached = UIElement.viewCache.get(pathOrElement)
             if (cached.content.childElementCount == 0) throw Error("A viewfile must have at least 1 root element")
-            this.root = document.importNode(cached.content, true).firstElementChild
+            this.root = document.importNode(cached.content, true).firstElementChild as HTMLElement
         }
     }
 
@@ -38,7 +38,17 @@ export abstract class UIElement {
         parent.appendChild(this.root)
     }
 
+    public destroy() {
+        this.root.parentElement.removeChild(this.root)
+        this.onDestroyed()
+    }
+
+    public getRoot(): HTMLElement {
+        return this.root
+    }
+
     protected abstract onViewCreated() : void
+    protected onDestroyed() : void { }
 
     public static preload(view: string) {
         UIElement.viewCache.set(view, null)
