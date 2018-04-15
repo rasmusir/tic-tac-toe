@@ -78,6 +78,12 @@ button.green:active { border-image-source: url("images/green_panel_inset.png"); 
     min-height: 24px;
 }
 
+.playerPanel {
+    display: inline-block;
+    width: 192px;
+    height: 58px;
+}
+
 *::selection {
     background: rgba(0, 0, 0, 0.3);
 }

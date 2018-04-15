@@ -1,9 +1,12 @@
 import {Connection} from './connection'
-import { WebRTC } from './webrtcClient';
+import { WebRTC } from './webrtcClient'
+import { UIElement } from './ui/UIElement'
 
 window.addEventListener("load", main)
 
-function main() {
+async function main() {
+    await UIElement.load();
+
     var serverConnection = new Connection()
     var rtc = new WebRTC()
     var otherId = ""

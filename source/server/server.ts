@@ -13,7 +13,9 @@ var currentId = 1
 const connectedClients = new Map<String, Client>()
 
 app.use("/script/", express.static("build/client/", {extensions: ["js"]}))
-app.use("/", express.static("public/views/"))
+app.use("/style/", express.static("public/css/"))
+app.use("/view/", express.static("public/views/", {extensions: ["html"]}))
+app.use("/", express.static("public/pages/", {extensions: ["html"]}))
 
 app.get("/playersonline", (req, res) => res.send(JSON.stringify({players: connectedClients.size})))
 

@@ -6,7 +6,8 @@
             "es6",
             "es2016"
         ],
-        "sourceMap": true
+        "inlineSourceMap": true,
+        "inlineSources": true
     },
     "include": [
         "**/*"
