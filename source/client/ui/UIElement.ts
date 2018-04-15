@@ -6,15 +6,19 @@ export abstract class UIElement {
     private viewBindings : Array<{tag: string, property: string}>
 
     constructor() {
-        this.setView((this.constructor as any)["_view"])
+        this.setViewFromCache((this.constructor as any)["_view"])
         this.bindViews()
         this.onViewCreated()
     }
 
-    protected setView(path: string) {
-        let cached = UIElement.viewCache.get(path)
-        if (cached.content.childElementCount == 0) throw Error("A viewfile must have at least 1 root element")
-        this.root = document.importNode(cached.content, true).firstElementChild
+    protected setViewFromCache(pathOrElement: string | Element) {
+        if (pathOrElement instanceof Element) {
+            this.root = pathOrElement
+        } else {
+            let cached = UIElement.viewCache.get(pathOrElement)
+            if (cached.content.childElementCount == 0) throw Error("A viewfile must have at least 1 root element")
+            this.root = document.importNode(cached.content, true).firstElementChild
+        }
     }
 
     private bindViews() {
@@ -55,6 +59,13 @@ export abstract class UIElement {
 export function view(view: string) {
     return function<T extends {new(...args:any[]):UIElement}>(constructor: T){
         UIElement.preload(view);
+        (constructor as any)["_view"] = view
+        return constructor
+    }
+}
+
+export function root(root: Element) {
+    return function<T extends {new(...args:any[]):UIElement}>(constructor: T){
         (constructor as any)["_view"] = view
         return constructor
     }
