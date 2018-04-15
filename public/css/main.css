@@ -49,11 +49,8 @@ button {
 
 .fieldset {
     padding: 0px;
-    height: 24px;
+    min-height: 24px;
     position: relative;
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
 }
 
 .fieldset input, .fieldset button, .fieldset label {
@@ -87,7 +84,6 @@ button.white:active { border-image-source: url("images/white_panel_inset.png"); 
     background-clip: padding-box;
     image-rendering: pixelated;
     position: relative;
-    box-sizing: content-box;
     padding: 0px 0px;
     min-height: 24px;
 }
