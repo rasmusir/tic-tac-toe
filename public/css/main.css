@@ -13,7 +13,7 @@ html, body {
     background-position: center;
     image-rendering: pixelated;
     margin: 0;
-    padding: 4px;
+    padding: 0;
 }
 
 h1 {

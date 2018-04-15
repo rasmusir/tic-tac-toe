@@ -4,24 +4,26 @@
         <title>Tic-Tac-Toe</title>
         <script type="module" src="/script/app"> </script>
         <link rel="stylesheet" type="text/css" href="style/main.css">
+        <link rel="stylesheet" type="text/css" href="/style/index.css">
     </head>
     <body>
-        <img id="logo" src="/style/images/maybegames.png">
-        <div tag="loginPlaceholder">
-
-        </div>
-        <h2 class="panel yellow">Players online: <span id="playersOnlineCount"></span></h2>
-        <div id="playersOnlineList">
-            <div class="panel yellow playerPanel">
-                <div class="name">Raz</div>
-                <div>The Creator</div>
-                <div>🎮 Tic-Tac-Toe</div>
+        <div id="main">
+            <div id="header">
+                <img id="logo" src="/style/images/maybegames.png">
             </div>
-            <div class="panel yellow playerPanel">
-                <div class="name">Chris</div>
-                <div>The Almighty</div>
-                <div>🎮 Tic-Tac-Toe</div>
+            <div id="mainHelper">
+                <div id="playerListHolder" tag="playerListHolder"></div>
+                <div id="mainHolder" tag="mainHolder">
+                    <div tag="loginPlaceholder">
+    
+                    </div>
+                </div>
+                <div id="chatAndProfileHolder">
+                    <div tag="chat"></div>
+                    <div tag="profile"></div>
+                </div>
             </div>
+            <div id="footer"></div>
         </div>
     </body>
 </html>
