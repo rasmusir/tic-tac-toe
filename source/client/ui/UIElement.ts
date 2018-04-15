@@ -22,6 +22,7 @@ export abstract class UIElement {
     }
 
     private bindViews() {
+        this.viewBindings = this.viewBindings || new Array<{tag: string, property: string}>()
         var nodeList = this.root.querySelectorAll("[tag]")
         var node : Element;
         var binding : {tag: string, property: string}
@@ -66,7 +67,7 @@ export function view(view: string) {
 
 export function root(root: Element) {
     return function<T extends {new(...args:any[]):UIElement}>(constructor: T){
-        (constructor as any)["_view"] = view
+        (constructor as any)["_view"] = root
         return constructor
     }
 }
