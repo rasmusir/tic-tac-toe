@@ -1,10 +1,10 @@
 import { MongoClient } from "mongodb"
-var serverOptions = require("../../options.json")
+import { ServerOptions } from "./serverOptions"
 
 export class Database {
     private mongoClient: MongoClient
     constructor() {
 
-        MongoClient.connect(`mongodb+srv://${serverOptions.username}:${serverOptions.password}@${serverOptions.server}`)
+        MongoClient.connect(`mongodb+srv://${ServerOptions.username}:${ServerOptions.password}@${ServerOptions.server}`)
     }
 }

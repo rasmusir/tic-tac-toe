@@ -1,4 +1,4 @@
 node_modules/
 build/
-./options.json
-./package-lock.json
+serverOptions.json
+package-lock.json
