@@ -2,12 +2,14 @@
 import * as express from "express"
 import * as http from "http"
 import * as WebSocket from "ws"
-import { Client } from "./client";
+import { Client } from "./client"
+import { Database } from "./database"
 //NOTE create server "app"
 const app = express()
 
 //NOTE create server
 const server = http.createServer(app)
+const db = new Database()
 
 
 app.use("/script/", express.static("build/client/", {extensions: ["js"]}))
