@@ -10,6 +10,9 @@ const app = express()
 //NOTE create server
 const server = http.createServer(app)
 const db = new Database()
+db.connect().then(() => {
+    console.log("Connected to the database!")
+})
 
 
 app.use("/script/", express.static("build/client/", {extensions: ["js"]}))
