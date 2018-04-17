@@ -12,6 +12,7 @@ html, body {
     background-attachment: fixed;
     background-position: center;
     image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
     margin: 0;
     padding: 0;
 }

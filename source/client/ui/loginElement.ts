@@ -4,9 +4,9 @@ import { PopupBubbleElement } from "./popupBubbleElement";
 @view("loginWindow")
 export class LoginElement extends UIElement{
 
-    @bind("nameInput")
+    @bind("usernameInput")
     private nameInput: HTMLInputElement
-    @bind("titleInput")
+    @bind("passwordInput")
     private titleInput: HTMLInputElement
     @bind("loginForm")
     private loginForm: HTMLFormElement
@@ -31,7 +31,7 @@ export class LoginElement extends UIElement{
         } else {
             var errBubble = new PopupBubbleElement()
             errBubble.attachTo(this.nameInput)
-            errBubble.setText("Name must be at least 2 characters. Dickhead.")
+            errBubble.setText("Name must be at least 2 characters.")
             errBubble.show()
         }  
     }

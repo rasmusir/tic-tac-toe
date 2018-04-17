@@ -7,7 +7,8 @@
             "es2016"
         ],
         "inlineSourceMap": true,
-        "inlineSources": true
+        "inlineSources": true,
+        "module": "amd"
     },
     "include": [
         "**/*"
