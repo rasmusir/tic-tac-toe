@@ -1,11 +1,11 @@
 @font-face {
-    font-family: "Silkscreen";
-    src: url('slkscr.ttf');
+    font-family: "Uni05";
+    src: url('uni05_53.ttf');
 }
 
 html, body {
-    font-family: 'Silkscreen';
-    font-size: 17px;
+    font-family: 'Uni05';
+    font-size: 16px;
     background: #99b;
     background-image: url("images/bg.png");
     background-size: cover;
@@ -61,7 +61,7 @@ button {
     background: transparent;
 }
 
-.fieldset input[type="text"], .fieldset input:not([type]) {
+.fieldset input[type="text"], .fieldset input[type="password"], .fieldset input:not([type]) {
     width: 128px;
 }
 
