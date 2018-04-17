@@ -5,9 +5,9 @@ import { PopupBubbleElement } from "./popupBubbleElement";
 export class LoginElement extends UIElement{
 
     @bind("usernameInput")
-    private nameInput: HTMLInputElement
+    private usernameInput: HTMLInputElement
     @bind("passwordInput")
-    private titleInput: HTMLInputElement
+    private passwordInput: HTMLInputElement
     @bind("loginForm")
     private loginForm: HTMLFormElement
 
@@ -23,14 +23,14 @@ export class LoginElement extends UIElement{
 
     private onLoginClicked(event: Event){
         event.preventDefault()
-        var name = this.nameInput.value.trim().toLowerCase()
-        var title = this.titleInput.value.trim().toLowerCase()
+        var name = this.usernameInput.value.trim().toLowerCase()
+        var title = this.passwordInput.value.trim().toLowerCase()
         if (name.length >= 2) {
             if (this.loginListener !== null)
                 this.loginListener.onRequestLogin(name, title)
         } else {
             var errBubble = new PopupBubbleElement()
-            errBubble.attachTo(this.nameInput)
+            errBubble.attachTo(this.usernameInput)
             errBubble.setText("Name must be at least 2 characters.")
             errBubble.show()
         }  
