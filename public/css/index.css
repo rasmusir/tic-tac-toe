@@ -55,3 +55,7 @@
     height: 58px;
     margin-bottom: 8px
 }
+
+.panel.small {
+    width: 250px;
+}

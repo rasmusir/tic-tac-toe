@@ -1,8 +1,9 @@
 import { UIElement, view, bind } from "./UIElement";
 import { PopupBubbleElement } from "./popupBubbleElement";
+import { RegisterElement, RegisterListener } from "./registerElement";
 
 @view("loginWindow")
-export class LoginElement extends UIElement{
+export class LoginElement extends UIElement implements RegisterListener {
 
     @bind("usernameInput")
     private usernameInput: HTMLInputElement
@@ -42,6 +43,17 @@ export class LoginElement extends UIElement{
     private onRegisterClicked(event: Event){
         event.preventDefault()
         this.hide()
+        var registerElement = new RegisterElement()
+        registerElement.appendTo(this.root.parentElement)
+        registerElement.setRegisterListener(this)
+    }
+
+    onRegisterCompleted(username: string) {
+        // Yay
+    }
+    
+    onRegisterCancel() {
+        this.show()
     }
 }
 
