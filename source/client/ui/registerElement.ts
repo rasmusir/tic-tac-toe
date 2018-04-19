@@ -53,5 +53,5 @@ export class RegisterElement extends UIElement{
 }
 export interface RegisterListener {
         onRegisterCompleted(name: string): void
-        onCancel(): void
+        onRegisterCancel(): void
 }

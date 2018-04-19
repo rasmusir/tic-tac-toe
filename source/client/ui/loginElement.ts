@@ -41,7 +41,7 @@ export class LoginElement extends UIElement{
 
     private onRegisterClicked(event: Event){
         event.preventDefault()
-        
+        this.hide()
     }
 }
 
