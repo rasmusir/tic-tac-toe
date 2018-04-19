@@ -5,6 +5,8 @@ export abstract class UIElement {
     protected root : HTMLElement
     private viewBindings : Array<{tag: string, property: string}>
 
+    private displayBeforeGone = "block"
+
     constructor() {
         this.setViewFromCache((this.constructor as any)["_view"])
         this.bindViews()
@@ -36,6 +38,15 @@ export abstract class UIElement {
 
     public appendTo(parent: Element) {
         parent.appendChild(this.root)
+    }
+
+    public hide() {
+        this.displayBeforeGone = getComputedStyle(this.root, null).getPropertyValue("display")
+        this.root.style.display = "none"
+    }
+
+    public show() {
+        this.root.style.display = this.displayBeforeGone
     }
 
     public destroy() {
