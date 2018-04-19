@@ -8,10 +8,12 @@ export class RegisterElement extends UIElement{
     private usernameInput: HTMLInputElement
     @bind("passwordInput")
     private passwordInput: HTMLInputElement
-    @bind("repeatPasswordInputInput")
+    @bind("repeatPasswordInput")
     private repeatPasswordInput: HTMLInputElement
     @bind("emailAddressInput")
     private emailAddressInput: HTMLInputElement
+    @bind("cancel")
+    private cancel: HTMLInputElement
     @bind("registerForm")
     private registerForm: HTMLInputElement
 
@@ -47,11 +49,11 @@ export class RegisterElement extends UIElement{
             success = false
         }
         if (this.registerListener !== null && success){
+            this.destroy()
             this.registerListener.onRegisterCompleted(name)
         }
     }
 }
 export interface RegisterListener {
         onRegisterCompleted(name: string): void
-        onRegisterCancel(): void
 }

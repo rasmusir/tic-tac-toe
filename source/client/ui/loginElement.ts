@@ -49,7 +49,7 @@ export class LoginElement extends UIElement implements RegisterListener {
     }
 
     onRegisterCompleted(username: string) {
-        // Yay
+        this.show()
     }
     
     onRegisterCancel() {
