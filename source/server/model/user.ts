@@ -13,7 +13,8 @@ export class User {
     displayname: string = null
     titles = new Array<ObjectID>()
     title: string = null
-    playerToken: string = null
+    accessToken: string = null
+    accessTokenIssued: Date = null
     created: Date = null
     coins: number = null
 }

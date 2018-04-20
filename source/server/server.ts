@@ -4,8 +4,9 @@ import * as http from "http"
 import * as WebSocket from "ws"
 import { Client } from "./client"
 import { Database } from "./database"
-import { UserApi } from "./userApi";
+import { UserApi } from "./api/userApi";
 import { Request, Response } from "express-serve-static-core";
+import { TitleApi } from "./api/titleApi";
 //NOTE create server "app"
 const app = express()
 
@@ -26,8 +27,8 @@ app.use((req: Request, res: Response, next: Function) => {
 db.connect().then(() => {
     console.log("Connected to the database!")
     
-    var userApi = new UserApi(db)
-    app.use("/user/", userApi.getRouter())
+    app.use("/user/", UserApi.getRouter(db))
+    app.use("/title/", TitleApi.getRouter(db))
 })
 
 app.use("/script/", express.static("build/client/", {extensions: ["js"]}))
