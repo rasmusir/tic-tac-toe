@@ -1,3 +1,4 @@
 export const ErrorCodes = {
-    UsernameTaken: "username taken"
+    UsernameTaken: "username taken",
+    InvalidAuthentication: "invalid authentication"
 }

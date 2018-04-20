@@ -18,6 +18,7 @@ export class UserApi {
 
         this.router.use(express.json())
         this.router.post("/register", (req, res) => this.register(req, res))
+        this.router.post("/authenticate", (req, res) => this.authenticate(req, res))
     }
 
     getRouter() { return this.router }
@@ -42,6 +43,25 @@ export class UserApi {
             delete user.playerToken
             res.send(user)
         }
+    }
 
+    async authenticate(req: Request, res: Response) {
+        let username = req.body.username.toLowerCase()
+        let password = req.body.password
+        
+        let user = await this.userCollection.findOne({ username: username })
+
+        if (user != null && await bcrypt.compare(password, user.password)) {
+            delete user.password
+            delete user.titles
+            delete user.playerToken
+            res.send(user)
+            return
+        }
+
+        res.statusCode = 401
+        res.send({
+            error: ErrorCodes.InvalidAuthentication
+        })
     }
 }
