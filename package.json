@@ -22,11 +22,13 @@
   "author": "Rasmus Israelsson & Chris Clutton",
   "license": "ISC",
   "dependencies": {
+    "@types/bcryptjs": "^2.4.1",
     "@types/express": "^4.11.1",
     "@types/mongodb": "^3.0.13",
     "@types/uuid": "^3.4.3",
     "@types/websocket": "0.0.38",
     "@types/ws": "^4.0.2",
+    "bcryptjs": "^2.4.3",
     "express": "^4.16.3",
     "mongodb": "^3.0.6",
     "nodemon": "^1.17.3",
