@@ -4,13 +4,13 @@ import { ObjectID } from "bson";
 
 export class User {
     constructor(id?: ObjectID) {
-        id = id || new ObjectID()
+        this._id = id || new ObjectID()
     }
-    id: ObjectID
+    _id: ObjectID
     username: string = null
     password: string = null
     email: string = null
-    displayName: string = null
+    displayname: string = null
     titles = new Array<ObjectID>()
     title: string = null
     playerToken: string = null

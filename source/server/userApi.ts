@@ -26,7 +26,7 @@ export class UserApi {
         let user = new User()
         user.username = (req.body.username as string).toLowerCase()
         user.password = await bcrypt.hash(req.body.password, 8)
-        user.displayName = req.body.username
+        user.displayname = req.body.username
         user.email = req.body.email || null
         user.created = new Date()
         user.coins = 0
@@ -37,6 +37,9 @@ export class UserApi {
             res.send({ error: ErrorCodes.UsernameTaken })
         } else {
             await this.userCollection.insert(user)
+            delete user.password
+            delete user.titles
+            delete user.playerToken
             res.send(user)
         }
 
