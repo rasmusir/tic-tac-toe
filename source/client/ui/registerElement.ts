@@ -1,5 +1,7 @@
 import { UIElement, view, bind } from "./UIElement";
 import {PopupBubbleElement} from "./popupBubbleElement";
+import { API } from "../api";
+import { User } from "../model/user";
 
 @view("registerWindow")
 export class RegisterElement extends UIElement{
@@ -42,6 +44,7 @@ export class RegisterElement extends UIElement{
             errBubble.show()
             success = false
         }
+
         if (password !== repeatPassword){
             let errBubble = new PopupBubbleElement()
             errBubble.attachTo(this.repeatPasswordInput)
@@ -49,9 +52,26 @@ export class RegisterElement extends UIElement{
             errBubble.show()
             success = false
         }
-        if (this.registerListener !== null && success){
-            this.destroy()
-            this.registerListener.onRegisterCompleted(name)
+
+        if (success) this.register(name, password, this.emailAddressInput.value)
+    }
+
+    private async register(username: string, password: string, email: string) {
+        try {
+            let user = await API.User.register(username, password, email.trim().length > 0 ? email : undefined)
+
+            if (this.registerListener !== null){
+                this.destroy()
+                this.registerListener.onRegisterCompleted(user)
+            }
+        }
+        catch (error) {
+            if (error instanceof API.User.UsernameTakenError) {
+                let errBubble = new PopupBubbleElement()
+                errBubble.attachTo(this.usernameInput)
+                errBubble.setText("Username unavailable.")
+                errBubble.show()
+            }
         }
     }
 
@@ -64,6 +84,6 @@ export class RegisterElement extends UIElement{
     }
 }
 export interface RegisterListener {
-        onRegisterCompleted(name: string): void
+        onRegisterCompleted(user: User): void
         onRegisterCancel(): void
 }

@@ -12,7 +12,7 @@ export class User {
     email: string = null
     displayName: string = null
     titles = new Array<ObjectID>()
-    activeTitle: string = null
+    title: string = null
     playerToken: string = null
     created: Date = null
     coins: number = null

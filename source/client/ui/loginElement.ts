@@ -1,6 +1,7 @@
 import { UIElement, view, bind } from "./UIElement";
 import { PopupBubbleElement } from "./popupBubbleElement";
 import { RegisterElement, RegisterListener } from "./registerElement";
+import { User } from "../model/user";
 
 @view("loginWindow")
 export class LoginElement extends UIElement implements RegisterListener {
@@ -48,7 +49,8 @@ export class LoginElement extends UIElement implements RegisterListener {
         registerElement.setRegisterListener(this)
     }
 
-    onRegisterCompleted(username: string) {
+    onRegisterCompleted(user: User) {
+        this.usernameInput.value = user.username
         this.show()
     }
     
