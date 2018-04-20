@@ -4,16 +4,31 @@ import * as http from "http"
 import * as WebSocket from "ws"
 import { Client } from "./client"
 import { Database } from "./database"
+import { UserApi } from "./userApi";
+import { Request, Response } from "express-serve-static-core";
 //NOTE create server "app"
 const app = express()
 
 //NOTE create server
 const server = http.createServer(app)
+
 const db = new Database()
-db.connect().then(() => {
-    console.log("Connected to the database!")
+
+app.use((req: Request, res: Response, next: Function) => {
+    if (db.isConnected())
+        next()
+    else {
+        res.sendStatus(500)
+        console.error("Not connected to the database yet.")
+    }
 })
 
+db.connect().then(() => {
+    console.log("Connected to the database!")
+    
+    var userApi = new UserApi(db)
+    app.use("/user/", userApi.getRouter())
+})
 
 app.use("/script/", express.static("build/client/", {extensions: ["js"]}))
 app.use("/style/", express.static("public/css/"))

@@ -97,6 +97,9 @@ button.white:active { border-image-source: url("images/white_panel_inset.png"); 
     position: absolute;
     margin-top: -6px;
     margin-left: 8px;
+    z-index: 100;
+    display: inline-block;
+    width: fit-content;
 }
 
 *::selection {
