@@ -21,6 +21,7 @@ export class RegisterElement extends UIElement{
 
     protected onViewCreated() {
         this.registerForm.onsubmit = event => this.onRegisterClicked(event)
+        this.cancel.onclick = event => this.onCancelClicked(event)
     }
 
     public setRegisterListener(registerListener: RegisterListener){
@@ -53,7 +54,16 @@ export class RegisterElement extends UIElement{
             this.registerListener.onRegisterCompleted(name)
         }
     }
+
+    private onCancelClicked(event: Event){
+        event.preventDefault()
+        this.destroy()
+        if (this.registerListener !== null){
+            this.registerListener.onRegisterCancel()
+        }
+    }
 }
 export interface RegisterListener {
         onRegisterCompleted(name: string): void
+        onRegisterCancel(): void
 }
