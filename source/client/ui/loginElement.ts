@@ -13,7 +13,7 @@ export class LoginElement extends UIElement implements RegisterListener {
     @bind("loginForm")
     private loginForm: HTMLFormElement
     @bind("register")
-    private register: HTMLFontElement
+    private register: HTMLLinkElement
 
     private loginListener: LoginListener = null
 
