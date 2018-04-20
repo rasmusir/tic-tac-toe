@@ -13,9 +13,9 @@ export class RegisterElement extends UIElement{
     @bind("emailAddressInput")
     private emailAddressInput: HTMLInputElement
     @bind("cancel")
-    private cancel: HTMLInputElement
+    private cancel: HTMLLinkElement
     @bind("registerForm")
-    private registerForm: HTMLInputElement
+    private registerForm: HTMLFormElement
 
     private registerListener: RegisterListener = null
 
@@ -35,10 +35,17 @@ export class RegisterElement extends UIElement{
         var password = this.passwordInput.value
         var repeatPassword = this.repeatPasswordInput.value
 
-        if (name.length < 2) {
+        if (name.length < 2){
             let errBubble = new PopupBubbleElement()
             errBubble.attachTo(this.usernameInput)
             errBubble.setText("Name must be at least 2 characters.")
+            errBubble.show()
+            success = false
+        }
+        if (password.length < 8){
+            let errBubble = new PopupBubbleElement()
+            errBubble.attachTo(this.passwordInput)
+            errBubble.setText("Password must be at least 8 characters.")
             errBubble.show()
             success = false
         }
