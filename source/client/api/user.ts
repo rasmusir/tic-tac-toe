@@ -34,11 +34,17 @@ export class UserAPI {
             })
 
             if (result.ok) {
-                UserAPI.currentUser = User.from((await result.json()).user)
+                let json = await result.json()
+                UserAPI.currentUser = User.from(json.user)
+                API.jwt = json.jwt
                 return true
             }
         }
         return false
+    }
+
+    static async getTitles() {
+        return await API.get("/title/list").then(r => r.json())
     }
 
     static UsernameTakenError = class extends Error {
