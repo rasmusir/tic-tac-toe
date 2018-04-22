@@ -3,17 +3,19 @@ import { Router } from "express";
 import { Request, Response } from "express-serve-static-core";
 import * as express from "express"
 import * as bcrypt from "bcryptjs"
+import * as jsonwebtoken from "jsonwebtoken";
 import { User } from "../model/user";
-import { Collection } from "mongodb";
+import { Collection, Server } from "mongodb";
 import { ErrorCodes } from "../ErrorCodes";
+import { ServerOptions } from "../serverOptions";
 
 export class UserApi {
 
     private static router: Router
-    private static userCollection: Collection<User>
+    public static collection: Collection<User>
 
     static getRouter(db: Database) {
-        UserApi.userCollection = db.getCollection("user")
+        UserApi.collection = db.getCollection("user")
         UserApi.router = Router()
 
         UserApi.router.use(express.json())
@@ -31,18 +33,14 @@ export class UserApi {
         user.email = req.body.email || null
         user.created = new Date()
         user.coins = 0
-        user.accessToken = await bcrypt.genSalt(8)
 
-        let foundUser = await UserApi.userCollection.findOne({ username: user.username })
+        let foundUser = await UserApi.collection.findOne({ username: user.username })
 
         if (foundUser) {
             res.send({ error: ErrorCodes.UsernameTaken })
         } else {
-            await UserApi.userCollection.insert(user)
-            delete user.password
-            delete user.titles
-            delete user.accessTokenIssued
-            res.send(user)
+            await UserApi.collection.insert(user)
+            res.send()
         }
     }
 
@@ -50,13 +48,28 @@ export class UserApi {
         let username = req.body.username.toLowerCase()
         let password = req.body.password
         
-        let user = await this.userCollection.findOne({ username: username })
+        let user = await this.collection.findOne({ username: username })
 
         if (user != null && await bcrypt.compare(password, user.password)) {
-            delete user.password
-            delete user.titles
-            delete user.accessTokenIssued
-            res.send(user)
+            
+            let jwt = await new Promise((resolve, reject) =>
+                    jsonwebtoken.sign(
+                        { sub: user._id },
+                        ServerOptions.jwtKey,
+                        (err: any, token: Object) => {
+                            if (err) reject()
+                            else resolve(token)
+                        }))
+
+            res.send({
+                user: {
+                    _id: user._id,
+                    displayname: user.displayname,
+                    title: user.title,
+                    coins: user.coins
+                },
+                jwt
+            })
             return
         }
 
@@ -68,43 +81,36 @@ export class UserApi {
 
     static authenticate(req: Request, res: Response, next: Function) {
         let header = req.header("Authorization")
+        let success = false
+        let split = header ? header.split(" ") : []
 
-        if (header) {
-            let split = header.split(" ")
-            if (split.length == 2 && split[0] == "Token") {
-                let token = split[1]
-                UserApi.userCollection.findOne({ accessToken: token }).then(user => {
-                    if (user != null) {
-                        req.user = user
-                        next()
-                    }
-                    else {
-                        res.statusCode = 403
-                        res.send()
-                    }
-                }).catch(() => {
-                    res.statusCode = 403
-                    res.send()
-                })
-            } else {
-                res.statusCode = 403
-                res.send()
-            }
-        } else {
+        if (split.length == 2 && split[0] == "Bearer") {
+            let token = split[1]
+
+            jsonwebtoken.verify(token, ServerOptions.jwtKey, (err: any, decoded: {sub: string}) => {
+                if (!err && decoded) {
+                    req.userId = decoded.sub
+                    success = true
+                    next()
+                }
+            })
+        }
+
+        if (!success) {
             res.statusCode = 403
             res.send()
         }
     }
 
     static updateUser(user: User) {
-        return UserApi.userCollection.update({ _id: user._id }, user)
+        return UserApi.collection.update({ _id: user._id }, user)
     }
 }
 
 declare global {
     namespace Express {
         interface Request {
-            user: User
+            userId: string
         }
     }
 }

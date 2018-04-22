@@ -1,5 +1,5 @@
 import { json, Router, Request } from "express";
-import { Collection, ObjectID } from "mongodb";
+import { Collection, ObjectID, ObjectId } from "mongodb";
 import { Title } from "../model/title";
 import { Database } from "../database";
 import { Response } from "express-serve-static-core";
@@ -8,10 +8,10 @@ import { UserApi } from "./userApi";
 export class TitleApi {
 
     private static router: Router
-    private static titleCollection: Collection<Title>
+    public static collection: Collection<Title>
 
     static getRouter(db: Database) {
-        TitleApi.titleCollection = db.getCollection("title")
+        TitleApi.collection = db.getCollection("title")
         TitleApi.router = Router()
 
         TitleApi.router.use(json())
@@ -22,24 +22,40 @@ export class TitleApi {
     }
 
     private static async list(req: Request, res: Response) {
-        let titles = await TitleApi.titleCollection.find({ _id: {
-            $in: req.user.titles
-        }}).toArray()
-        res.send(titles)
+
+        let result = await UserApi.collection.aggregate([
+            { $match: { "_id": new ObjectId(req.userId) }},
+            { $lookup: {
+                from: TitleApi.collection.collectionName,
+                localField: "titles",
+                foreignField: "_id",
+                as: "titles"
+            }},
+            { $project: { "titles": true }}
+        ]).next()
+
+        res.send(result.titles)
     }
 
     private static async set(req: Request, res: Response) {
-        let titleId = req.user.titles.find(title => title.equals(new ObjectID(req.body.titleId)))
 
-        if (titleId) {
-            let title = await TitleApi.titleCollection.findOne({ _id: new ObjectID(titleId) })
-            if (title) {
-                req.user.title = title.title
-                let result = await UserApi.updateUser(req.user)
-                return res.send(title)
-            }
+        let titleResult = await UserApi.collection.aggregate([
+            { $match: { "_id": new ObjectId(req.userId) }},
+            { $lookup: {
+                from: TitleApi.collection.collectionName,
+                localField: "titles",
+                foreignField: "_id",
+                as: "titles"
+            }},
+            { $unwind: "$titles"},
+            { $replaceRoot: { newRoot: "$titles" }},
+            { $match: { "_id": new ObjectId(req.body.titleId) }}
+        ]).next()
+
+        if (titleResult && titleResult._id) {
+            await UserApi.collection.update({ _id: new ObjectId(req.userId) }, { $set: { title: titleResult.title }} )
+            return res.send(titleResult)
         }
-
         res.statusCode = 404
         res.send()
     }

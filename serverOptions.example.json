@@ -2,5 +2,6 @@
     "username" : "<username goes here>",
     "password" : "<password goes here>",
     "server" : "<server url goes here>",
-    "datbase": "<database name here>"
+    "datbase": "<database name here>",
+    "jwtKey": "<jwt key goes here>"
 }
