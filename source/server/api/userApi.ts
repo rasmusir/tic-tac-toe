@@ -63,8 +63,9 @@ export class UserApi {
 
             res.send({
                 user: {
-                    _id: user._id,
+                    id: user._id,
                     displayname: user.displayname,
+                    username: user.username,
                     title: user.title,
                     coins: user.coins
                 },

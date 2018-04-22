@@ -3,6 +3,7 @@ import { LoginElement, LoginListener } from "./loginElement";
 import { Connections } from "../connections";
 import { PlayerListElement } from "./playerListElement";
 import { Player } from "../player";
+import { API } from "../api";
 
 @root(document.body)
 export class Index extends UIElement implements LoginListener {
@@ -17,13 +18,12 @@ export class Index extends UIElement implements LoginListener {
     private playerListHolderDiv: HTMLDivElement
 
     private connections: Connections
-    private loginElement: LoginElement
     private playerListElement: PlayerListElement
 
     protected onViewCreated(): void {
-        this.loginElement = new LoginElement()
-        this.loginElement.appendTo(this.loginDiv)
-        this.loginElement.setLoginListner(this)
+        let loginElement = new LoginElement()
+        loginElement.appendTo(this.loginDiv)
+        loginElement.setLoginListner(this)
         window.addEventListener("resize", () => this.onResize())
         this.onResize()
     }
@@ -44,11 +44,9 @@ export class Index extends UIElement implements LoginListener {
         this.playerListElement.appendTo(this.playerListHolderDiv)
     }
 
-    async onRequestLogin(name: string, title: string) {
+    async onLogin() {
         try {
-            await this.connections.connectToServer(name)
-            this.loginElement.destroy()
-            this.loginElement = null
+            await this.connections.connectToServer(API.User.currentUser.username)
             this.onLoggedIn()
         }
         catch (e) {

@@ -1,28 +1,22 @@
 export class User {
-    private _username: string
     private _displayname: string
+    private _username: string
     private _title: string
-    private _email: string
     private _coins: number
     private _id: string
-    private _created: Date
 
-    get username() { return this._username }
     get displayname() { return this._displayname }
+    get username() { return this._username }
     get title() { return this._title }
-    get email() { return this._email }
     get coins() { return this._coins }
     get id() { return this._id }
-    get created() { return this._created }
 
     private constructor(source: any) {
         this._username = source.username
         this._displayname = source.displayname
         this._title = source.title
-        this._email = source.email
         this._coins = source.coins
-        this._id = source._id
-        this._created = source.created
+        this._id = source.id
     }
 
     static from(source: Object) {

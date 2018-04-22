@@ -68,7 +68,7 @@ export class RegisterElement extends UIElement{
 
             if (this.registerListener !== null){
                 this.destroy()
-                this.registerListener.onRegisterCompleted(user)
+                this.registerListener.onRegisterCompleted()
             }
         }
         catch (error) {
@@ -90,6 +90,6 @@ export class RegisterElement extends UIElement{
     }
 }
 export interface RegisterListener {
-        onRegisterCompleted(user: User): void
+        onRegisterCompleted(): void
         onRegisterCancel(): void
 }

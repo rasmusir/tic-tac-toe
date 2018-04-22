@@ -2,6 +2,7 @@ import { UIElement, view, bind } from "./UIElement";
 import { PopupBubbleElement } from "./popupBubbleElement";
 import { RegisterElement, RegisterListener } from "./registerElement";
 import { User } from "../model/user";
+import { API } from "../api";
 
 @view("loginWindow")
 export class LoginElement extends UIElement implements RegisterListener {
@@ -26,19 +27,33 @@ export class LoginElement extends UIElement implements RegisterListener {
         this.loginListener = loginListener
     }
 
-    private onLoginClicked(event: Event){
+    private async onLoginClicked(event: Event){
         event.preventDefault()
-        var name = this.usernameInput.value.trim().toLowerCase()
+        var username = this.usernameInput.value.trim().toLowerCase()
         var password = this.passwordInput.value
-        if (name.length >= 2) {
-            if (this.loginListener !== null)
-                this.loginListener.onRequestLogin(name, password)
-            } else {
+
+        if (username.length <= 2) {
             var errBubble = new PopupBubbleElement()
             errBubble.attachTo(this.usernameInput)
             errBubble.setText("Name must be at least 2 characters.")
             errBubble.show()
-        }  
+            return
+        }
+        
+        if (password.length == 0) {
+            var errBubble = new PopupBubbleElement()
+            errBubble.attachTo(this.passwordInput)
+            errBubble.setText("Enter a password")
+            errBubble.show()
+            return
+        }
+
+        if (await API.User.login(username, password)) {
+            this.destroy()
+            if (this.loginListener !== null) {
+                this.loginListener.onLogin()
+            }
+        }
     }
 
     private onRegisterClicked(event: Event){
@@ -49,8 +64,7 @@ export class LoginElement extends UIElement implements RegisterListener {
         registerElement.setRegisterListener(this)
     }
 
-    onRegisterCompleted(user: User) {
-        this.usernameInput.value = user.username
+    onRegisterCompleted() {
         this.show()
     }
     
@@ -60,5 +74,5 @@ export class LoginElement extends UIElement implements RegisterListener {
 }
 
 export interface LoginListener {
-    onRequestLogin(name: string, password: string): void
+    onLogin(): void
 }
