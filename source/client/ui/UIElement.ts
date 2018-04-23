@@ -36,7 +36,7 @@ export abstract class UIElement {
         }
     }
 
-    public appendTo(parent: Element) {
+    public appendTo(parent: Node) {
         parent.appendChild(this.root)
     }
 

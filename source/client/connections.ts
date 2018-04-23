@@ -1,6 +1,7 @@
 import { ServerConnection } from "./serverConnection";
 import { WebRTC } from "./webrtcClient";
 import { MessageID } from "../shared/messageID";
+import { Player } from "./player";
 
 export class Connections {
 
@@ -44,7 +45,7 @@ export class Connections {
         })
     }
 
-    async requestUsers() {
-        return this.serverConnection.request(MessageID.GET_PLAYERS) as Promise<Array<{id:string, name: string, title: string}>>
+    async requestPlayers() {
+        return this.serverConnection.request(MessageID.GET_PLAYERS) as Promise<Array<Player>>
     }
 }
