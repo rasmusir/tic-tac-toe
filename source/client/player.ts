@@ -1,4 +1,7 @@
+import { User } from "./model/user";
+
 export class Player {
-    private name: string = ""
-    private title: string = ""
+    public id: string
+    public user: User
+    public playing: string
 }

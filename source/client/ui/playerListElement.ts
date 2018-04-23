@@ -8,9 +8,10 @@ export class PlayerListElement extends UIElement{
         
     }
 
-    public populate(players: Map<string, Player>) {
-        players.forEach( (player, id) => {
+    public populate(players: Array<Player>) {
+        players.forEach( player => {
             var playerPlate = new PlayerPlateElement()
+            //playerPlate.setPlayer(player)
             playerPlate.appendTo(this.root)
         })
     }

@@ -8,7 +8,8 @@
         ],
         "inlineSourceMap": true,
         "inlineSources": true,
-        "module": "amd"
+        "module": "amd",
+        "outDir": "../../build/client"
     },
     "include": [
         "**/*"

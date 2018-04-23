@@ -35,8 +35,11 @@ export class UserAPI {
 
             if (result.ok) {
                 let json = await result.json()
-                UserAPI.currentUser = User.from(json.user)
                 API.jwt = json.jwt
+
+                
+
+                UserAPI.currentUser = User.from(json.user)
                 return true
             }
         }

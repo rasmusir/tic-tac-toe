@@ -1,3 +1,6 @@
+import { MessageID } from "../shared/messageID"
+import { API } from "./api";
+
 export class ServerConnection {
 
     public connected = false
@@ -5,6 +8,7 @@ export class ServerConnection {
     private name: String = null
     private id: String = null
     private events = new Map()
+    private requests = new Map()
 
     connect(name: String) {
         this.websocket = new WebSocket(`ws://${window.location.host}/`)
@@ -15,25 +19,27 @@ export class ServerConnection {
 
     handleConnectionOpen() {
         this.connected = true
-        this.send("set name", {name: this.name})
+        this.send(MessageID.AUTHENTICATE, {jwt: API.jwt})
     }
 
     handleMessage(message: any) {
         var data = JSON.parse(message.data)
         
         switch (data.id) {
-            case "name accepted":
+            case MessageID.AUTHENTICATION_SUCCEEDED:
                 this.id = data.payload.id
                 console.log(`Name set to ${this.name} and id set to ${this.id}.`)
-                this.send("get players")
                 break
-            case "name denied":
-                console.warn(`${this.name} denied as name.`)
+            case MessageID.AUTHENTICATION_FAILED:
+                console.warn(`Authentication over websockets failed.`)
                 this.websocket.close()
                 this.connected = false
                 break
-            case "forwarded":
+            case MessageID.FORWARD:
                 this.handleForwardedMessage(data.payload)
+                break
+            case MessageID.RESPONSE:
+                this.handleResponse(data.payload)
                 break
         }
 
@@ -52,23 +58,44 @@ export class ServerConnection {
             callback(payload.message.payload, payload.from)
     }
 
-    on(messageId: string, callback: Function) {
+    private handleResponse(response: any) {
+        let request = this.requests.get(response.id)
+        if (request) {
+            this.requests.delete(response.id)
+            request.resolve(response.payload)
+        }
+    }
+
+    async request(name: MessageID, payload?: any) {
+        return new Promise((resolve, reject) => {
+            let id = uuid()
+            this.send(MessageID.REQUEST, {
+                name,
+                id,
+                payload: JSON.stringify(payload)
+            })
+
+            this.requests.set(id, {resolve, reject})
+        })
+    }
+
+    on(messageId: MessageID, callback: Function) {
         this.events.set(messageId, callback)
     }
     
-    remove(messageId: string) {
+    remove(messageId: MessageID) {
         this.events.delete(messageId)
     }
 
-    send(messageId: string, payload?: any) {
+    send(messageId: MessageID, payload?: any) {
         if (this.connected)
             this.websocket.send(JSON.stringify({id: messageId, payload}))
         else
             throw new Error("Not connected to anything you dimwit.")
     }
 
-    sendTo(messageId: string, clientId: string, payload?: any) {
-        this.send("forward", {
+    sendTo(messageId: MessageID, clientId: string, payload?: any) {
+        this.send(MessageID.FORWARD, {
             message: {
                 id: messageId,
                 target: clientId,
@@ -76,4 +103,12 @@ export class ServerConnection {
             }
         })
     }
+}
+
+function uuid() {
+    let arr = new Uint8Array(4)
+    crypto.getRandomValues(arr)
+    let id = (arr as any as string[]).reduce((sum, byte) => sum + (byte as any).toString(16))
+    console.log(id)
+    return id
 }

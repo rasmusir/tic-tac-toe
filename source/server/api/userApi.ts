@@ -53,8 +53,16 @@ export class UserApi {
         if (user != null && await bcrypt.compare(password, user.password)) {
             
             let jwt = await new Promise((resolve, reject) =>
-                    jsonwebtoken.sign(
-                        { sub: user._id },
+                    jsonwebtoken.sign({ 
+                            sub: user._id,
+                            user: {
+                                id: user._id,
+                                displayname: user.displayname,
+                                username: user.username,
+                                title: user.title,
+                                coins: user.coins
+                            }
+                        },
                         ServerOptions.jwtKey,
                         (err: any, token: Object) => {
                             if (err) reject()

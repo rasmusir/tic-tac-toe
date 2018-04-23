@@ -32,15 +32,13 @@ export class Index extends UIElement implements LoginListener {
         this.connections = connections
     }
 
-    private onLoggedIn() {
+    private async onLoggedIn() {
+
+        let users = await this.connections.requestUsers()
+
         this.playerListElement = new PlayerListElement()
 
-        var fakePlayers = new Map<string, Player>()
-        for (var i = 0; i < 25; i++) {
-            fakePlayers.set(i.toString(), new Player())
-        }
-
-        this.playerListElement.populate(fakePlayers)
+        //this.playerListElement.populate(users)
         this.playerListElement.appendTo(this.playerListHolderDiv)
     }
 

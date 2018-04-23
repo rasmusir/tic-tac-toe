@@ -2,9 +2,9 @@
   "name": "tictactoe",
   "version": "1.0.0",
   "description": "A simple Tic-Tac-Toe game",
-  "main": "build/server/server.js",
+  "main": "build/server/server/server.js",
   "scripts": {
-    "start": "node build/server/server.js",
+    "start": "node build/server/server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "run-p watch build:watch",
     "watch": "nodemon --delay 1 --watch build/server",

@@ -31,7 +31,8 @@ db.connect().then(() => {
     app.use("/title/", TitleApi.getRouter(db))
 })
 
-app.use("/script/", express.static("build/client/", {extensions: ["js"]}))
+app.use("/script/", express.static("build/client/client/", {extensions: ["js"]}))
+app.use("/shared/", express.static("build/client/shared/", {extensions: ["js"]}))
 app.use("/style/", express.static("public/css/"))
 app.use("/view/", express.static("public/views/", {extensions: ["html"]}))
 app.use("/", express.static("public/pages/", {extensions: ["html"]}))
