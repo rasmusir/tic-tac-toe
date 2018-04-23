@@ -46,7 +46,6 @@ export class Client {
                 this.socket.close()
                 return
             } else {
-                console.log(decoded)
                 this.user = decoded.user
                 this.connectedClients.set(this.id, this)
                 this.send(MessageID.AUTHENTICATION_SUCCEEDED, {id: this.id})
