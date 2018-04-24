@@ -4,6 +4,7 @@
         "target": "es6",
         "noImplicitAny": true,
         "rootDir": "source",
-        "outDir": "build"
+        "outDir": "build",
+        "experimentalDecorators": true
     }
 }

@@ -1,0 +1,68 @@
+import { API } from "../api";
+import { User } from "../model/user";
+
+export class UserAPI {
+
+    static currentUser: User
+
+    static async register(username: string, password: string, email?: string) {
+        if (username.trim().length != 0 && password.trim().length != 0) {
+            let response = await API.post("/user/register", {
+                username, 
+                password,
+                email
+            })
+
+            if (response.ok) return true
+
+            let result = await response.json()
+
+            if (result.error) {
+                switch (result.error) {
+                    case "username taken":
+                        throw new API.User.UsernameTakenError("Username taken")
+                }
+            }
+
+            return false
+        } else {
+            throw new API.User.InvalidUsernameOrPasswordError()
+        }
+    }
+
+    static async login(username: string, password: string) {
+        if (username.trim().length != 0 && password.length != 0) {
+            let result = await API.post("/user/login", {
+                username,
+                password
+            })
+
+            if (result.ok) {
+                let json = await result.json()
+                API.jwt = json.jwt
+
+                
+
+                UserAPI.currentUser = User.from(json.user)
+                return true
+            }
+        }
+        return false
+    }
+
+    static async getTitles() {
+        return await API.get("/title/list").then(r => r.json())
+    }
+
+    static UsernameTakenError = class extends Error {
+        constructor(message: string) {
+            super(message)
+        }
+    }
+
+    static InvalidUsernameOrPasswordError = class extends Error {
+        constructor() {
+            super("Invalid username or password")
+        }
+    }
+}

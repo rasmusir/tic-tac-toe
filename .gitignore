@@ -1,2 +1,4 @@
 node_modules/
 build/
+serverOptions.json
+package-lock.json

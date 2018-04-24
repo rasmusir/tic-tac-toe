@@ -1,19 +1,23 @@
 @font-face {
-    font-family: "Silkscreen";
-    src: url('slkscr.ttf');
+    font-family: "Uni05";
+    src: url('uni05_53.ttf');
 }
 
 html, body {
-    font-family: 'Silkscreen';
-    font-size: 17px;
+    font-family: 'Uni05';
+    font-size: 16px;
     background: #99b;
     background-image: url("images/bg.png");
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
     image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
     margin: 0;
-    padding: 4px;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
 
 h1 {
@@ -24,6 +28,16 @@ h1 {
 h2 {
     font-size: 34px;
     font-weight: normal;
+}
+
+form {
+    margin: 0px;
+}
+
+#logo {
+    width: calc(62px*4);
+    height: calc(7px*4);
+    margin: 10px;
 }
 
 input, button {
@@ -39,11 +53,8 @@ button {
 
 .fieldset {
     padding: 0px;
-    height: 24px;
+    min-height: 24px;
     position: relative;
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
 }
 
 .fieldset input, .fieldset button, .fieldset label {
@@ -54,7 +65,7 @@ button {
     background: transparent;
 }
 
-.fieldset input[type="text"], .fieldset input:not([type]) {
+.fieldset input[type="text"], .fieldset input[type="password"], .fieldset input:not([type]) {
     width: 128px;
 }
 
@@ -64,6 +75,10 @@ button.red:active { border-image-source: url("images/red_panel_inset.png"); }
 button.yellow:active { border-image-source: url("images/yellow_panel_inset.png"); }
 .green { border-image-source: url("images/green_panel.png"); }
 button.green:active { border-image-source: url("images/green_panel_inset.png"); }
+.white { border-image-source: url("images/white_panel.png"); }
+.white.inset { border-image-source: url("images/white_panel_inset.png"); }
+button.white:active { border-image-source: url("images/white_panel_inset.png"); }
+
 
 .panel {
     color: rgba(0, 0, 0, 0.8);
@@ -73,9 +88,21 @@ button.green:active { border-image-source: url("images/green_panel_inset.png"); 
     background-clip: padding-box;
     image-rendering: pixelated;
     position: relative;
-    box-sizing: content-box;
-    padding: 0px 4px;
+    padding: 0px 0px;
     min-height: 24px;
+}
+
+.panel.inline {
+    display: inline-block;
+}
+
+.popupBubble {
+    position: absolute;
+    margin-top: -6px;
+    margin-left: 8px;
+    z-index: 100;
+    display: inline-block;
+    width: fit-content;
 }
 
 *::selection {
