@@ -33,9 +33,8 @@ export class Index extends UIElement implements LoginListener {
     }
 
     private async onLoggedIn() {
-
+        Player.setServerConnection(this.connections.serverConnection)
         this.playerListElement = new PlayerListElement()
-        this.playerListElement.setServerConnection(this.connections.serverConnection)
         this.playerListElement.appendTo(this.playerListHolderDiv)
     }
 

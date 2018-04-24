@@ -109,6 +109,5 @@ function uuid() {
     let arr = new Uint8Array(4)
     crypto.getRandomValues(arr)
     let id = (arr as any as string[]).reduce((sum, byte) => sum + (byte as any).toString(16))
-    console.log(id)
     return id
 }

@@ -1,20 +1,17 @@
 import { UIElement, view } from "./UIElement";
-import { Player } from "../player";
+import { Player, PlayerEventListener } from "../player";
 import { PlayerPlateElement } from "./playerPlateElement";
 import { ServerConnection } from "../serverConnection";
 import { server } from "../../../node_modules/@types/websocket/index";
 import { MessageID } from "../../shared/messageID";
 
 @view("playerList")
-export class PlayerListElement extends UIElement{
-    protected onViewCreated() {
-        
-    }
+export class PlayerListElement extends UIElement implements PlayerEventListener{
 
-    public async setServerConnection(serverConnection: ServerConnection) {
-        let players = await serverConnection.request(MessageID.GET_PLAYERS) as Array<Player>
-        this.populate(players)
-        serverConnection.on(MessageID.PLAYER_CAME_ONLINE, (player: Player) => this.addPlayer(player))
+    private playerPlates = new Map<string, PlayerPlateElement>()
+
+    protected onViewCreated() {
+        Player.addEventListener(this)
     }
 
     private populate(players: Array<Player>) {
@@ -23,13 +20,33 @@ export class PlayerListElement extends UIElement{
             var playerPlate = new PlayerPlateElement()
             playerPlate.setPlayer(player)
             playerPlate.appendTo(fragment)
+            this.playerPlates.set(player.id, playerPlate)
         })
         this.root.appendChild(fragment)
     }
 
-    private addPlayer(player: Player) {
+    private addPlayerPlate(player: Player) {
         var playerPlate = new PlayerPlateElement()
         playerPlate.setPlayer(player)
         playerPlate.appendTo(this.root)
+        this.playerPlates.set(player.id, playerPlate)
+    }
+
+    private removePlayerPlate(player: Player) {
+        let playerPlate = this.playerPlates.get(player.id)
+        if (playerPlate) playerPlate.destroy()
+        this.playerPlates.delete(player.id)
+    }
+
+    onPlayerCameOnline(player: Player) {
+        this.addPlayerPlate(player)
+    }
+
+    onPlayerWentOffline(player: Player) {
+        this.removePlayerPlate(player)
+    }
+
+    onAllPlayers(players: Player[]) {
+        this.populate(players)
     }
 }

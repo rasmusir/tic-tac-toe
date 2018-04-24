@@ -33,7 +33,7 @@ export class RegisterElement extends UIElement{
     private onRegisterClicked(event: Event){
         event.preventDefault()
         var success = true
-        var name = this.usernameInput.value.trim().toLowerCase()
+        var name = this.usernameInput.value.trim()
         var password = this.passwordInput.value
         var repeatPassword = this.repeatPasswordInput.value
 

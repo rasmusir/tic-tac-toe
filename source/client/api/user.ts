@@ -7,11 +7,15 @@ export class UserAPI {
 
     static async register(username: string, password: string, email?: string) {
         if (username.trim().length != 0 && password.trim().length != 0) {
-            let result = await API.post("/user/register", {
+            let response = await API.post("/user/register", {
                 username, 
                 password,
                 email
-            }).then(response => response.json())
+            })
+
+            if (response.ok) return true
+
+            let result = await response.json()
 
             if (result.error) {
                 switch (result.error) {
@@ -20,7 +24,7 @@ export class UserAPI {
                 }
             }
 
-            return true
+            return false
         } else {
             throw new API.User.InvalidUsernameOrPasswordError()
         }

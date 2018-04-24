@@ -74,6 +74,7 @@ export class Client {
     }
 
     handleClose() {
+        this.broadcast(MessageID.PLAYER_WENT_OFFLINE, { id: this.id })
         this.connectedClients.delete(this.id)
     }
 
