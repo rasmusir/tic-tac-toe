@@ -4,18 +4,19 @@ import { Connections } from "../connections";
 import { PlayerListElement } from "./playerListElement";
 import { Player } from "../player";
 import { API } from "../api";
+import { ChatElement } from "./chatElement";
 
 @root(document.body)
 export class Index extends UIElement implements LoginListener {
 
     @bind("loginPlaceholder")
     private loginDiv: HTMLDivElement
-
     @bind("mainHolder")
     private mainHolderDiv: HTMLDivElement
-
     @bind("playerListHolder")
     private playerListHolderDiv: HTMLDivElement
+    @bind("chat")
+    private chatDiv: HTMLDivElement
 
     private connections: Connections
     private playerListElement: PlayerListElement
@@ -24,6 +25,7 @@ export class Index extends UIElement implements LoginListener {
         let loginElement = new LoginElement()
         loginElement.appendTo(this.loginDiv)
         loginElement.setLoginListner(this)
+
         window.addEventListener("resize", () => this.onResize())
         this.onResize()
     }
@@ -36,6 +38,11 @@ export class Index extends UIElement implements LoginListener {
         Player.setServerConnection(this.connections.serverConnection)
         this.playerListElement = new PlayerListElement()
         this.playerListElement.appendTo(this.playerListHolderDiv)
+
+        
+        let chatElement = new ChatElement()
+        chatElement.setServerConnection(this.connections.serverConnection)
+        chatElement.appendTo(this.chatDiv)
     }
 
     async onLogin() {

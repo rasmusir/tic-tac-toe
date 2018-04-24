@@ -10,5 +10,6 @@ export enum MessageID {
     FORWARD,
     GET_PLAYERS,
     ICE,
-    SDP
+    SDP,
+    CHAT_MESSAGE
 }

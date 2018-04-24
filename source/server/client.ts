@@ -36,6 +36,9 @@ export class Client {
             case MessageID.REQUEST:
                 this.handleRequest(message.payload)
                 break
+            case MessageID.CHAT_MESSAGE:
+                this.handleChatMessage(message.payload)
+                break
         }
     }
 
@@ -52,6 +55,10 @@ export class Client {
                 this.broadcast(MessageID.PLAYER_CAME_ONLINE, this)
             }
         })
+    }
+    
+    handleChatMessage(data: any) {
+        this.broadcast(MessageID.CHAT_MESSAGE, { id: this.id, text: data.text }, true)
     }
 
     handleRequest(request: any) {
@@ -82,9 +89,9 @@ export class Client {
         this.socket.send(JSON.stringify({id: messageId, payload}))
     }
 
-    broadcast(id: MessageID, payload: any) {
+    broadcast(id: MessageID, payload: any, toMe: boolean = false) {
         this.connectedClients.forEach(client => {
-            if (client !== this)
+            if (toMe || client !== this)
                 client.send(id, payload)
         })
     }
