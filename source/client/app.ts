@@ -10,7 +10,10 @@ class Application {
 }
 
 var app = new Application()
-var windowLoader = new Promise(resolve => window.addEventListener("load", () => resolve()))
+var windowLoader = new Promise(resolve => {
+    if (document.readyState == "interactive" || document.readyState == "complete") return resolve()
+    window.addEventListener("load", () => resolve())
+})
 
 Promise.all([
     UIElement.load(),
