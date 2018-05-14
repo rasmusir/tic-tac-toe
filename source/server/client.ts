@@ -4,26 +4,29 @@ import { User } from "./model/user";
 import * as jsonwebtoken from "jsonwebtoken";
 import { ServerOptions } from "./serverOptions";
 import { MessageID } from "../shared/messageID";
+import { Matchmaker } from "./matchmaker";
+import { listeners } from "cluster";
 
 export class Client {
-    private user: User
-    private id: string = null
+    public user: User
+    public id: string = null
     private socket: WebSocket = null
     private connectedClients: Map<string, Client>
-    
+    private matchmaker: Matchmaker
+
+    private onceListeners = new Map<string, Array<Function>>()
     private requestListeners = new Map()
 
-    constructor(socket: WebSocket, connectedClients: Map<string, Client>) {
+    constructor(socket: WebSocket, connectedClients: Map<string, Client>, matchmaker: Matchmaker) {
         this.socket = socket
-        this.id = uuid4()
+        this.matchmaker = matchmaker
         this.connectedClients = connectedClients
+        this.id = uuid4()
         this.socket.on("message", message => this.handleMessage(message))
         this.socket.on("close", () => this.handleClose())
         this.onRequest(MessageID.GET_PLAYERS, () => [...this.connectedClients.values()])
     }
 
-    
-    
     handleMessage(message: any) {
         message = JSON.parse(message)
         switch (message.id) {
@@ -38,6 +41,9 @@ export class Client {
                 break
             case MessageID.CHAT_MESSAGE:
                 this.handleChatMessage(message.payload)
+                break
+            case MessageID.MATCHMAKE:
+                this.matchmaker.handleMatchmake(this, message.payload)
                 break
         }
     }
@@ -82,6 +88,9 @@ export class Client {
 
     handleClose() {
         this.broadcast(MessageID.PLAYER_WENT_OFFLINE, { id: this.id })
+        let listeners = this.onceListeners.get("close")
+        this.onceListeners.delete("close")
+        listeners.forEach(callback => callback())
         this.connectedClients.delete(this.id)
     }
 
@@ -98,6 +107,23 @@ export class Client {
 
     onRequest(messageId: MessageID, callback: (payload?: any) => any) {
         this.requestListeners.set(messageId, callback)
+    }
+
+    once(event: string, callback: Function) {
+        let listeners = this.onceListeners.get(event)
+        if (listeners) {
+            listeners.push(callback)
+        } else {
+            this.onceListeners.set(event, [callback])
+        }
+        return callback
+    }
+
+    removeOnceListener(event: string, callback: Function) {
+        let listeners = this.onceListeners.get(event)
+        if (listeners) {
+            this.onceListeners.set(event, listeners.filter(cb => cb !== callback))
+        }
     }
 
     toJSON() {

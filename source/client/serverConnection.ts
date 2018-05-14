@@ -6,7 +6,7 @@ export class ServerConnection {
     public connected = false
     private websocket: WebSocket = null
     private name: String = null
-    private id: String = null
+    public id: String = null
     private events = new Map()
     private requests = new Map()
 

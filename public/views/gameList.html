@@ -1,0 +1,28 @@
+<div style="height: 100%; width: 100%;">
+    <div tag="listHolder">
+        <h2>Games</h2>
+        <ul tag="list">
+            
+        </ul>
+    </div>
+    <div tag="matchmaking">
+        <h2>Looking for players...</h2>
+        <div class="spinner"></div>
+    </div>
+
+    <style>
+        div[tag=listHolder] {
+            text-align: center;
+            position: absolute;
+        }
+
+        div[tag=matchmaking] {
+            position: absolute;
+            text-align: center;
+            display: none;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+        }
+    </style>
+</div>

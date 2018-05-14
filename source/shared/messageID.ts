@@ -11,5 +11,7 @@ export enum MessageID {
     GET_PLAYERS,
     ICE,
     SDP,
-    CHAT_MESSAGE
+    CHAT_MESSAGE,
+    MATCHMAKE,
+    MATCHMAKE_SUCCESS
 }

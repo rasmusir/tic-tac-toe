@@ -72,3 +72,11 @@
     width: 100%;
     overflow: hidden;
 }
+
+.spinner {
+    background-image: url("images/spinner.gif");
+    width: 48px;
+    height: 48px;
+    background-size: 100%;
+    margin: auto;
+}

@@ -7,6 +7,7 @@ import { Database } from "./database"
 import { UserApi } from "./api/userApi";
 import { Request, Response } from "express-serve-static-core";
 import { TitleApi } from "./api/titleApi";
+import { Matchmaker } from "./matchmaker";
 //NOTE create server "app"
 const app = express()
 
@@ -41,10 +42,11 @@ app.get("/playersonline", (req, res) => res.send(JSON.stringify({players: connec
 
 const webSocketServer = new WebSocket.Server({ server })
 const connectedClients = new Map<string, Client>()
+const matchmaker = new Matchmaker()
 var currentId = 1
 
 webSocketServer.on("connection", socket => {
-    var client = new Client(socket, connectedClients)
+    var client = new Client(socket, connectedClients, matchmaker)
 })
 
 

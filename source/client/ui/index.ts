@@ -6,6 +6,7 @@ import { Player } from "../player";
 import { API } from "../api";
 import { ChatElement } from "./chatElement";
 import { GameElement } from "./gameElement";
+import { GameListElement } from "./gameListElement";
 
 @root(document.body)
 export class Index extends UIElement implements LoginListener {
@@ -44,8 +45,8 @@ export class Index extends UIElement implements LoginListener {
         chatElement.setServerConnection(this.connections.serverConnection)
         chatElement.appendTo(this.chatDiv)
 
-        let gameElement = new GameElement()
-        gameElement.appendTo(this.mainHolderDiv)
+        let gameListELement = new GameListElement(this.connections)
+        gameListELement.appendTo(this.mainHolderDiv)
     }
 
     async onLogin() {

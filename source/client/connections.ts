@@ -26,6 +26,11 @@ export class Connections {
         this.rtc.onSendLocalDescription = description => this.serverConnection.sendTo(MessageID.SDP, this.connectedToId, {sdp: description})
     }
 
+    async connectToPlayer(peerId: string) {
+        this.connectedToId = peerId
+        this.rtc.call()
+    }
+
     async connectToServer(name: string) {
         return new Promise((resolve, reject) => {
 
