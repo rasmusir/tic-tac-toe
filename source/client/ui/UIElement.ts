@@ -40,6 +40,10 @@ export abstract class UIElement {
         parent.appendChild(this.root)
     }
 
+    public appendToRoot() {
+        document.body.appendChild(this.root)
+    }
+
     public hide() {
         this.displayBeforeGone = getComputedStyle(this.root, null).getPropertyValue("display")
         this.root.style.display = "none"

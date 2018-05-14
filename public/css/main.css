@@ -105,6 +105,15 @@ button.white:active { border-image-source: url("images/white_panel_inset.png"); 
     width: fit-content;
 }
 
+.dialog {
+    margin: auto;
+    vertical-align: middle;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
 *::selection {
     background: rgba(0, 0, 0, 0.3);
 }

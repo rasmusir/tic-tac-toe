@@ -5,6 +5,7 @@ import { PlayerListElement } from "./playerListElement";
 import { Player } from "../player";
 import { API } from "../api";
 import { ChatElement } from "./chatElement";
+import { GameElement } from "./gameElement";
 
 @root(document.body)
 export class Index extends UIElement implements LoginListener {
@@ -17,13 +18,13 @@ export class Index extends UIElement implements LoginListener {
     private playerListHolderDiv: HTMLDivElement
     @bind("chat")
     private chatDiv: HTMLDivElement
-
+    
     private connections: Connections
     private playerListElement: PlayerListElement
 
     protected onViewCreated(): void {
         let loginElement = new LoginElement()
-        loginElement.appendTo(this.loginDiv)
+        loginElement.appendToRoot()
         loginElement.setLoginListner(this)
 
         window.addEventListener("resize", () => this.onResize())
@@ -38,11 +39,13 @@ export class Index extends UIElement implements LoginListener {
         Player.setServerConnection(this.connections.serverConnection)
         this.playerListElement = new PlayerListElement()
         this.playerListElement.appendTo(this.playerListHolderDiv)
-
         
         let chatElement = new ChatElement()
         chatElement.setServerConnection(this.connections.serverConnection)
         chatElement.appendTo(this.chatDiv)
+
+        let gameElement = new GameElement()
+        gameElement.appendTo(this.mainHolderDiv)
     }
 
     async onLogin() {
@@ -57,8 +60,8 @@ export class Index extends UIElement implements LoginListener {
 
     private onResize() {
         var height = this.mainHolderDiv.parentElement.clientHeight
-        var parentWidth = this.mainHolderDiv.parentElement.clientWidth
-        this.mainHolderDiv.style.width = Math.min(height * ( 4.0 / 3.0), parentWidth) + "px"
-        this.mainHolderDiv.style.height = Math.min(height, parentWidth * ( 3.0 / 4.0)) + "px"
+        var minWidth = this.mainHolderDiv.parentElement.clientWidth - (190 + 190)
+        this.mainHolderDiv.style.width = Math.min(height * ( 4.0 / 3.0), minWidth) + "px"
+        this.mainHolderDiv.style.height = Math.min(height, minWidth * ( 3.0 / 4.0)) + "px"
     }
 }

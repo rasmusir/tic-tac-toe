@@ -7,7 +7,7 @@
 
 #header {
     width: 100%;
-    height: 64px;
+    height: 0px;
     flex-shrink: 1;
     flex-grow: 0;
 }
@@ -16,16 +16,20 @@
     flex-grow: 1;
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 #footer {
-    height: 64px;
+    height: 0px;
 }
 
 #playerListHolder {
     flex-grow: 1;
+    flex-shrink: 0;
     flex-basis: 0;
     overflow-y: scroll;
+    width: 190px;
+    max-width: 190px; 
 }
 
 #playerListHolder::-webkit-scrollbar {
@@ -41,6 +45,7 @@
 #chatAndProfileHolder {
     flex-grow: 1;
     flex-basis: 0;
+    min-width: 190px;
 }
 
 .playerList {
@@ -51,11 +56,19 @@
 
 .playerPanel {
     display: inline-block;
-    width: 170px;
-    height: 58px;
-    margin-bottom: 8px
+    margin: 4px;
 }
 
 .panel.small {
     width: 250px;
+}
+
+.panel.game {
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.panel.game.iframe {
+    width: 100%;
+    overflow: hidden;
 }
